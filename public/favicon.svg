@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Tracks the browser chrome's theme, not the page's: a tab strip in dark mode
+       renders a #3a3340 stone as a smudge. -->
+  <style>
+    .stone { fill: #3a3340 }
+    @media (prefers-color-scheme: dark) { .stone { fill: #ece7f2 } }
+  </style>
+  <path class="stone" fill-rule="evenodd"
+        d="M6 29V14a10 10 0 0 1 20 0v15zM14.5 9h3v4h4v3h-4v7h-3v-7h-4v-3h4z"/>
+  <rect class="stone" x="3" y="28" width="26" height="4" rx="1"/>
+</svg>

@@ -1,0 +1,333 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap");
+@import "tailwindcss";
+
+@source "../views";
+
+/**
+ * Two palettes, one set of names.
+ *
+ * The raw values live on `:root` / `[data-theme=dark]`; the `@theme` block below
+ * points Tailwind's colour tokens *at those variables* rather than at hex. That
+ * indirection is the whole trick: `bg-card` compiles to `var(--color-card)` →
+ * `var(--card)`, so flipping `data-theme` on <html> recolours every utility, every
+ * inline SVG fill and every shadow at once, with no duplicate dark: classes
+ * anywhere in the markup.
+ */
+:root {
+  --bg: #f6f3ec;
+  --card: #ffffff;
+  --ink: #3a3340;
+  --gray: #837b8c;
+  --gray-dark: #e3ddd2;
+  --yellow: #d99a1f;
+  --yellow-dark: #b57e12;
+  --teal: #58a3a8;
+  --pink: #cbb3c5;
+  --green: #8fb573;
+
+  /* Illustration */
+  --outline: #3a3340;
+  --stone-c: #cfc6d2;
+  --stone-d: #b3a8b8;
+  --grass-c: #8fb573;
+  --grass-d: #6f9657;
+  --sand-c: #e9c877;
+  --sand-d: #caa24a;
+  --bone: #ffffff;
+  --plaque: #e8e2d6;
+  --door: #5b4f63;
+  --cloud: #ffffff;
+  --cloud-edge: #ddd5e0;
+  --emblem: #3a3340;
+  --shadow: #3a334029;
+
+  /* Inscriptions. Read against the *stone*, not against the page — a name carved
+   * into granite has to stay legible whichever way the site is themed, and
+   * `--ink` is contrast-checked against `--bg`, which is a different surface. */
+  --carve: #3a3340;
+  --carve-soft: #6b6374;
+}
+
+[data-theme="dark"] {
+  --bg: #16131d;
+  --card: #221d2c;
+  --ink: #ece7f2;
+  --gray: #9a92a6;
+  --gray-dark: #3a3346;
+  --yellow: #e8b53f;
+  --yellow-dark: #caa24a;
+  --teal: #6fc3c9;
+  --pink: #b58fae;
+  --green: #7da463;
+
+  --outline: #131019;
+  --stone-c: #7d7392;
+  --stone-d: #978cad;
+  --grass-c: #55814a;
+  --grass-d: #79ab66;
+  --sand-c: #cfa751;
+  --sand-d: #ab8a3e;
+  --bone: #f2ecdc;
+  --plaque: #ded7ca;
+  --door: #131019;
+  --cloud: #2c2638;
+  --cloud-edge: #453d55;
+  --emblem: #e8dff0;
+  --shadow: #00000080;
+
+  --carve: #f4f0f8;
+  --carve-soft: #ded7e6;
+}
+
+@theme {
+  --font-display: "Fredoka", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-gray: var(--gray);
+  --color-gray-dark: var(--gray-dark);
+  --color-yellow: var(--yellow);
+  --color-yellow-dark: var(--yellow-dark);
+  --color-teal: var(--teal);
+  --color-pink: var(--pink);
+  --color-green: var(--green);
+  --color-bone: var(--bone);
+  --color-plaque: var(--plaque);
+  --color-carve: var(--carve);
+  --color-carve-soft: var(--carve-soft);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+/* The chunky display face, used for every label on a stone. */
+.pixel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* One box style for the whole site: thick outline, hard offset shadow, no blur.
+ * Logical axis only below — see the note on shorthands further down. */
+.pxbox,
+.pxbox-white {
+  background: var(--card);
+  border: 2.5px solid var(--ink);
+  box-shadow: 0 5px 0 var(--shadow);
+  border-radius: 22px;
+}
+
+.pxbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--shadow);
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding-block: 0.6rem;
+  padding-inline: 1.4rem;
+  background: var(--yellow);
+  color: #241f2a;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+
+.pxbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--shadow);
+}
+
+.pxbtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--shadow);
+}
+
+.pxbtn--ghost {
+  background: var(--card);
+  color: var(--ink);
+}
+
+/* Never use the `padding` / `margin` shorthands on a class that also carries
+ * Tailwind utilities. Utilities are emitted inside `@layer utilities` and rules in
+ * this file are unlayered — unlayered wins outright, whatever the specificity — so
+ * a shorthand here silently zeroes the other axis set by `py-*` / `mt-*`. */
+.wrap {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* A stone lifts and tilts on hover. The entire interaction design of the site. */
+.tomb {
+  transition: transform 0.15s;
+}
+
+.tomb:hover {
+  transform: translateY(-4px) rotate(-1deg);
+}
+
+.field {
+  width: 100%;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  padding-block: 0.55rem;
+  padding-inline: 0.85rem;
+  font-family: var(--font-sans);
+}
+
+.field:focus {
+  outline: 3px solid var(--teal);
+  outline-offset: 1px;
+}
+
+/* Tier / shape / emblem pickers: a radio whose label is the whole card. */
+.pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pick label {
+  display: block;
+  cursor: pointer;
+  border: 2.5px solid var(--gray-dark);
+  border-radius: 18px;
+  background: var(--card);
+  padding: 0.75rem;
+  transition:
+    border-color 0.12s,
+    transform 0.12s;
+}
+
+.pick label:hover {
+  transform: translateY(-2px);
+}
+
+.pick input:checked + label {
+  border-color: var(--ink);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+
+.pick input:focus-visible + label {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- animation */
+
+.cloud,
+.bird {
+  position: absolute;
+  animation: drift var(--dur, 80s) linear infinite;
+}
+
+.cloud {
+  opacity: 0.9;
+}
+
+.bird svg {
+  animation: flap 0.7s ease-in-out infinite;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.floaty {
+  animation: floaty 3.5s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(-15vw);
+  }
+  100% {
+    transform: translateX(115vw);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes flap {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-6px) scaleY(0.85);
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Drifting clouds and a scrolling ad rail are decoration. Anyone who has asked
+ * their system to stop moving things has asked this site too. */
+@media (prefers-reduced-motion: reduce) {
+  .cloud,
+  .bird,
+  .bird svg,
+  .marquee-track,
+  .floaty {
+    animation: none;
+  }
+}
+
+/**
+ * A grave whose domain has lapsed.
+ *
+ * The startup died when the founder said it did; the domain dies when the
+ * registration does, and that second death is the only thing on this site that
+ * happens on its own. So it gets a visual: the stone desaturates, leans, and
+ * sinks a little into the ground.
+ *
+ * `filter` and `transform` only — nothing here changes layout, so a stone that
+ * decays between two page loads does not reflow the graveyard around it.
+ */
+.decayed {
+  filter: grayscale(0.7) brightness(0.82) contrast(0.92);
+  transform: rotate(-1.4deg) translateY(3px);
+  transition: filter 400ms ease, transform 400ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decayed {
+    transition: none;
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "boneyard",
+  "main": "worker.ts",
+  // From 2025-04-01, `nodejs_compat` populates `process.env` from vars and secrets.
+  // Keel's `env()` reads process.env — on an earlier date APP_KEY is invisible and
+  // every request 500s on an unsignable session cookie.
+  "compatibility_date": "2025-04-01",
+  // AsyncLocalStorage: Keel carries the request and the open transaction in it.
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": { "directory": "./public" },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "boneyard",
+      "database_id": "3d08515f-3b17-4cdf-84ba-3544422c1b44"
+    }
+  ],
+
+  // Custom domains, not plain routes: Cloudflare creates the DNS records and the
+  // certificate itself, so there is nothing to add by hand in the zone. Requires
+  // boneyard.online to be an active zone on this account first — a route pointing
+  // at a zone Cloudflare does not serve fails the deploy rather than half-working.
+  // Kept on alongside the custom domains: adding `routes` disables workers.dev by
+  // default, which takes the site offline entirely for as long as DNS is pending.
+  "workers_dev": true,
+
+  "routes": [
+    { "pattern": "boneyard.online", "custom_domain": true },
+    { "pattern": "www.boneyard.online", "custom_domain": true }
+  ],
+
+  // Nightly domain watch (04:17 UTC — off the hour, because every free service on
+  // earth is rate-limited at :00). See app/Domain/decay.ts.
+  "triggers": { "crons": ["17 4 * * *"] },
+
+  "vars": {
+    "DB_CONNECTION": "d1",
+    // Production refuses a paid burial when STRIPE_SECRET_KEY is missing, rather
+    // than completing it for free. See app/Domain/stripe.ts.
+    "APP_ENV": "production",
+    // Share links and Stripe's success/cancel URLs are built from this, so it has
+    // to be the real origin — a stale value here sends paying buyers to localhost.
+    "APP_URL": "https://boneyard.online",
+    "APP_DEBUG": "false"
+  }
+}
