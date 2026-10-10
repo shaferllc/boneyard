@@ -14,8 +14,9 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "boneyard",
-      "database_id": "3d08515f-3b17-4cdf-84ba-3544422c1b44"
+      // No database_id: dply creates "boneyard" in its own account and refuses
+      // an id it doesn't own.
+      "database_name": "boneyard"
     }
   ],
 

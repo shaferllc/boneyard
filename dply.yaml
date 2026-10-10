@@ -1,0 +1,4 @@
+# dply ignores wrangler.jsonc `triggers`; schedules come from here.
+# Nightly domain watch, see app/Domain/decay.ts.
+crons:
+  - schedule: "17 4 * * *"
